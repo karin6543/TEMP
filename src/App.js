@@ -1,23 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios'
+import Problems from './Problems';
 
+
+// let data = {} 
+
+// const init = async function(){
+//   await axios.get('https://us-east1-algo-tracker-dev.cloudfunctions.net/getProblems').then((res)=>{
+//   data = res.data
+// })
+// }
+
+// init()
+// console.log('date', data)
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <h1>hi</h1>
+        <Problems/>
     </div>
   );
 }
