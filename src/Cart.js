@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-function Cart() {
+function Cart(id) {
     const defaultNumDay = 3
     const defaultEmail = 'iris.shi@gmail.com'
 
@@ -11,7 +11,7 @@ function Cart() {
     const [showCustomDate, setShowCustomDate] = useState(false)
     const [showCustomEmail, setShowCustomEmail] = useState(false)
 
-
+    console.log('in cart-->', id)
     async function handleSubmit(e) {
         
         e.preventDefault()
