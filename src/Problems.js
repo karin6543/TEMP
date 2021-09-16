@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { Component, useRef, useState, useEffect } from 'react'
 import Problem from './Problem'
 import UserSchedule from './UserSchedule'
+import Pagination from './Pagination'
 
 function Problems() {
     
@@ -13,14 +14,15 @@ function Problems() {
     const [keywordFilter, setKeywordFilter] = useState([])
     const [diffFilter, setdiffFilter] = useState([])
     const [typeFilter, setTypeFilter] = useState([])
+    const [numPerPage, setnumPerPage] = useState(10)
+    const [currentPage, setcurrentPage] = useState(1)
 
     const idRef = useRef()
     const keywordRef = useRef()
     const diffRef = useRef()
     const typeRef = useRef()
+    const numRef = useRef()
 
-
-    
 
 
     const fetchData = async ()=>{
@@ -58,7 +60,7 @@ function Problems() {
         let filterArr = []
         //1st - filter by keyword
         if(searchTerm !==''){
-            console.log('filter by keyword')
+           
             filterArr = filterByKeyword(arr, searchTerm)
         }
         else{
@@ -66,23 +68,21 @@ function Problems() {
         }
         //2nd - filter by diff
         if(diffTerm !=='-'){
-            console.log('filter by diff')
+            
             filterArr = filterByDifficulty(filterArr, diffTerm)
         }
         else{
             filterArr = filterArr
         }
         if(typeTerm !=='-'){
-            console.log('filter by type')
+         
             filterArr = filterByType(filterArr, typeTerm)
         }
-
-
-        console.log('filtered arr', filterArr)
+    
         setFilterArr(filterArr)
 
     }
-    console.log('current arr', filteredArr)
+
 
     function filterByKeyword(a, keyword){
         return a.filter((ele)=>{return ele.title.toLowerCase().indexOf(keyword.toLowerCase())!==-1})
@@ -95,7 +95,16 @@ function Problems() {
     function filterByType(a, t){
         return a.filter((ele)=>{return ele.type.indexOf(t)!==-1})}
     
+    function handleNum(){
+        setnumPerPage(parseInt(numRef.current.value))
+    }
+    function paginate(num){
+        setcurrentPage(num)
+    }
 
+    const endIndex = numPerPage*currentPage
+    const startIndex = endIndex - numPerPage
+    const problemDisplay = filteredArr.length>0? filteredArr.slice(startIndex, endIndex): []
     return (
         <div>
             <div>Filteres: {}</div> 
@@ -175,16 +184,25 @@ function Problems() {
                         <option> Trie </option>
                         <option> Two-Pointers </option>
                         <option> Union-Find </option>
-
                     </select>
                 </div>
                 <button type="submit">
                Create</button>
             </form>
+            <div onChange={handleNum}>
+                <label>Num of problems</label>
+                    <select as="select" ref={numRef} single>
+                        <option selected="selected">10</option>
+                        <option>25</option>
+                        <option>50</option>
+                        <option >100</option>
+                    </select>
+            </div>
+            <Pagination probPerpage={numPerPage} totalNum={filteredArr.length} paginate={paginate} />
             <UserSchedule props={selectId}/>
             <button onClick={fetchData}>Load Problems</button>
            
-            {filteredArr.length>0? filteredArr.map(p=> <div ><Problem title={p.title} difficulty={p.difficulty} key={p.id} url={p.url} rate={p.rate} type={p.type}/><button onClick={onClickProb} id={p.id} title={p.title}>Select</button></div>):''}
+            {problemDisplay.length>0? problemDisplay.map(p=> <div ><Problem title={p.title} difficulty={p.difficulty} key={p.id} url={p.url} rate={p.rate} type={p.type}/><button onClick={onClickProb} id={p.id} title={p.title}>Select</button></div>):''}
    
            
         </div>
