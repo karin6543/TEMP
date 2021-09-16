@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-function Cart(id) {
+function UserSchedule(fromParent) {
     const defaultNumDay = 3
     const defaultEmail = 'iris.shi@gmail.com'
 
@@ -11,7 +11,14 @@ function Cart(id) {
     const [showCustomDate, setShowCustomDate] = useState(false)
     const [showCustomEmail, setShowCustomEmail] = useState(false)
 
-    console.log('in cart-->', id)
+    let pId = null
+    let pTitle = null
+
+    if(fromParent.props){
+        pId = fromParent.props.id
+        pTitle = fromParent.props.title
+    }
+    // console.log('in cart:  ', fromParent)
     async function handleSubmit(e) {
         
         e.preventDefault()
@@ -25,7 +32,11 @@ function Cart(id) {
         const dateSubmit = dateRef.current?dateRef.current.value:formattedDate; 
         const emailSubmit = emailRef.current?emailRef.current.value: defaultEmail
 
-        console.log('your submissions: ', dateSubmit, emailSubmit)
+        // db.collection('userSchedule').add({
+        //     noticeDate: today,
+        //     problemId: parseInt(pID),
+        //     email: emailSubmit
+        //   })
         
     }
         
@@ -85,7 +96,8 @@ function Cart(id) {
             {showCustomEmail?<div> <label>Email</label>
                 <input type="email" ref={emailRef} required />
             </div>:''}
-               
+
+            <div>Problem Selected: {pTitle} </div>  
               <button type="submit">
                 Create</button>
               </form>
@@ -93,4 +105,4 @@ function Cart(id) {
     )
 }
 
-export default Cart
+export default UserSchedule

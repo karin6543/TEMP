@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { Component, useRef, useState, useEffect } from 'react'
 import Problem from './Problem'
-import Cart from './Cart'
+import UserSchedule from './UserSchedule'
 
 function Problems() {
     
@@ -18,7 +18,8 @@ function Problems() {
     }
 
     const onClickProb = (e) =>{
-        setId(e.target.id)
+        setId({'id':e.target.id, 
+        'title':e.target.title})
     }
     
 
@@ -37,10 +38,10 @@ function Problems() {
 
     return (
         <div>
-            <Cart props={selectId}/>
+            <UserSchedule props={selectId}/>
             <button onClick={fetchData}>Load Problems</button>
            
-            {arr.length>0? arr.map(p=> <div><Problem title={p.title} difficulty={p.difficulty} key={p.id} url={p.url} rate={p.rate} type={p.type}/><button onClick={onClickProb} id={p.id}>Select</button></div>):''}
+            {arr.length>0? arr.map(p=> <div ><Problem title={p.title} difficulty={p.difficulty} key={p.id} url={p.url} rate={p.rate} type={p.type}/><button onClick={onClickProb} id={p.id} title={p.title}>Select</button></div>):''}
    
            
         </div>
