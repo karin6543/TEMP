@@ -32,8 +32,11 @@ function Problems() {
     }
 
     const onClickProb = (e) =>{
+        e.preventDefault()
+       
         setId({'id':e.target.id, 
-        'title':e.target.title})
+        'title':e.target.title,
+        'type':e.target.name})
     }
     
 
@@ -202,7 +205,7 @@ function Problems() {
             <UserSchedule props={selectId}/>
             <button onClick={fetchData}>Load Problems</button>
            
-            {problemDisplay.length>0? problemDisplay.map(p=> <div ><Problem title={p.title} difficulty={p.difficulty} key={p.id} url={p.url} rate={p.rate} type={p.type}/><button onClick={onClickProb} id={p.id} title={p.title}>Select</button></div>):''}
+            {problemDisplay.length>0? problemDisplay.map(p=> <div ><Problem title={p.title} difficulty={p.difficulty} key={p.id} url={p.url} rate={p.rate} type={p.type}/><button id={p.id} title={p.title} name={p.type} onClick={onClickProb} >Select</button></div>):''}
    
            
         </div>

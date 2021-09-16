@@ -6,19 +6,22 @@ function UserSchedule(fromParent) {
 
     const dateRef = useRef()
     const emailRef = useRef()
-
+    const passRef = useRef()
 
     const [showCustomDate, setShowCustomDate] = useState(false)
     const [showCustomEmail, setShowCustomEmail] = useState(false)
+    const [t, setType] = useState()
 
     let pId = null
     let pTitle = null
+    let pTypes = []
 
     if(fromParent.props){
         pId = fromParent.props.id
         pTitle = fromParent.props.title
+        pTypes = fromParent.props.type
     }
-    // console.log('in cart:  ', fromParent)
+  
     async function handleSubmit(e) {
         
         e.preventDefault()
@@ -31,12 +34,20 @@ function UserSchedule(fromParent) {
 
         const dateSubmit = dateRef.current?dateRef.current.value:formattedDate; 
         const emailSubmit = emailRef.current?emailRef.current.value: defaultEmail
+        const passSubmit = passRef.current? passRef.current.value: 'No'
 
-        // db.collection('userSchedule').add({
-        //     noticeDate: today,
-        //     problemId: parseInt(pID),
-        //     email: emailSubmit
-        //   })
+        for(let i=0; i<pTypes.length; i++){
+            db.collection('userSchedule').add({
+            noticeDate: today,
+            problemId: parseInt(pID),
+            email: emailSubmit,
+            type: pTypes[i]
+          
+          })
+
+        }
+       
+        console.log('submision', pType)
         
     }
         
@@ -47,29 +58,23 @@ function UserSchedule(fromParent) {
         if(selectOption==='Custom Now'){
             
             setShowCustomDate(true)
-           
-
         }
         else{
-            setShowCustomDate(false)
-           
+            setShowCustomDate(false)   
         }}
     async function handleChangeEmail(e){
 
         const selectOption = e.target.value
         
-        if(selectOption==='Custom Now'){
-            
+        if(selectOption==='Custom Now'){  
             setShowCustomEmail(true)
-          
         }
         else{
             setShowCustomEmail(false)
-       
         }}
 
     useEffect(()=>{
-        console.log('show custom option?')
+  
         },[showCustomDate])
     return (
         <div>
@@ -97,7 +102,13 @@ function UserSchedule(fromParent) {
                 <input type="email" ref={emailRef} required />
             </div>:''}
 
-            <div>Problem Selected: {pTitle} </div>  
+            <div>Problem Selected: {pTitle} </div>
+
+            <label>Pass this problem:</label>
+                <select as="select" ref={passRef} single>
+                    <option>Yes</option>
+                    <option>No</option>
+            </select>  
               <button type="submit">
                 Create</button>
               </form>
