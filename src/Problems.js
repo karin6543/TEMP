@@ -9,15 +9,24 @@ function Problems() {
     let [filteredArr, setFilterArr] = useState([])
     let [res, setRes] = useState([])
     let [selectId, setId] = useState()
+
+    const [keywordFilter, setKeywordFilter] = useState([])
+    const [diffFilter, setdiffFilter] = useState([])
+    const [typeFilter, setTypeFilter] = useState([])
+
     const idRef = useRef()
-    const searchRef = useRef()
+    const keywordRef = useRef()
+    const diffRef = useRef()
+    const typeRef = useRef()
+
+
     
+
 
     const fetchData = async ()=>{
         await axios.get('https://us-east1-algo-tracker-dev.cloudfunctions.net/getProblems').then((r)=>{
             setRes(r.data)
-     
-        })
+     })
     }
 
     const onClickProb = (e) =>{
@@ -28,51 +37,150 @@ function Problems() {
 
     useEffect(()=>{
         let {problems, difficulty, ids, urls, rates, types} = res
-        // console.log(problems)
+        let temp = []
         if(problems){
             for(let i=0;i<problems.length;i++){
-                arr.push({'id':ids[i],'title':problems[i],'difficulty': difficulty[i], 'url': urls[i], 'type': types[i], 'rate': rates[i]})
+                temp.push({'id':ids[i],'title':problems[i],'difficulty': difficulty[i], 'url': urls[i], 'type': types[i], 'rate': rates[i]})
             }
 
-            setArr(arr)
-            setFilterArr(arr)
+            setArr(temp)
+            setFilterArr(temp)
         }
        
     }, [res])
 
     function handleChange(e){
 
-        let searchTerm = searchRef.current.value
-        console.log('current search term-》', searchTerm)
+        const searchTerm = keywordRef.current.value
+        const diffTerm = diffRef.current.value 
+        const typeTerm = typeRef.current.value
+
+        let filterArr = []
+        //1st - filter by keyword
         if(searchTerm !==''){
-            console.log('valid term', searchTerm)
-            setFilterArr(filterByKeyword(arr, searchTerm))
+            console.log('filter by keyword')
+            filterArr = filterByKeyword(arr, searchTerm)
         }
         else{
-            console.log('empty term', searchTerm)
-            setFilterArr(arr)
+            filterArr = arr
+        }
+        //2nd - filter by diff
+        if(diffTerm !=='-'){
+            console.log('filter by diff')
+            filterArr = filterByDifficulty(filterArr, diffTerm)
+        }
+        else{
+            filterArr = filterArr
+        }
+        if(typeTerm !=='-'){
+            console.log('filter by type')
+            filterArr = filterByType(filterArr, typeTerm)
         }
 
+
+        console.log('filtered arr', filterArr)
+        setFilterArr(filterArr)
+
     }
+    console.log('current arr', filteredArr)
 
     function filterByKeyword(a, keyword){
         return a.filter((ele)=>{return ele.title.toLowerCase().indexOf(keyword.toLowerCase())!==-1})
     }
 
-    console.log('see the filter arr:', filteredArr)
+    function filterByDifficulty(a, difficulty){
+        return a.filter((ele)=>{return ele.difficulty.toLowerCase().indexOf(difficulty.toLowerCase())!==-1})
+    }
+
+    function filterByType(a, t){
+        return a.filter((ele)=>{return ele.type.indexOf(t)!==-1})}
+    
+
     return (
         <div>
-            
+            <div>Filteres: {}</div> 
             <form>
-           <div onChange={handleChange}>
-               <label>Search</label>
-               <input ref={searchRef}></input>
-           </div>
-          
-          
-             <button type="submit">
+                <div onChange={handleChange}>
+                    <label>By Keyword</label>
+                    <input ref={keywordRef}></input>
+                    
+                    <label>By difficulty</label>
+                        <select as="select" ref={diffRef} multiple>
+                            <option selected="selected">-</option>
+                            <option>Easy</option>
+                            <option>Medium</option>
+                            <option>Hard</option>
+                    </select>
+                    <label>By Type</label>
+                        <select as="select" ref={typeRef} multiple>
+                        <option selected="selected">-</option>
+                        <option> Array </option>
+                        <option> Backtracking </option>
+                        <option> Binary-Indexed-Tree </option>
+                        <option> Binary-Search </option>
+                        <option> Binary-Search-Tree </option>
+                        <option> Binary-Tree </option>
+                        <option> Bit-Manipulation </option>
+                        <option> Brainteaser </option>
+                        <option> Breadth-First-Search </option>
+                        <option> Bucket-Sort </option>
+                        <option> Combinatorics </option>
+                        <option> Concurrency </option>
+                        <option> Counting </option>
+                        <option> Counting-Sort </option>
+                        <option> Data-Stream </option>
+                        <option> Depth-First-Search </option>
+                        <option> Design </option>
+                        <option> Divide-and-Conquer </option>
+                        <option> Doubly-Linked-List </option>
+                        <option> Dynamic-Programming </option>
+                        <option> Enumeration </option>
+                        <option> Game-Theory </option>
+                        <option> Geometry </option>
+                        <option> Graph </option>
+                        <option> Greedy </option>
+                        <option> Hash-Function </option>
+                        <option> Hash-Table </option>
+                        <option> Heap-Priority-Queue </option>
+                        <option> Interactive </option>
+                        <option> Iterator </option>
+                        <option> Linked-List </option>
+                        <option> Math </option>
+                        <option> Matrix </option>
+                        <option> Memoization </option>
+                        <option> Merge-Sort </option>
+                        <option> Minimum-Spanning-Tree </option>
+                        <option> Monotonic-Queue </option>
+                        <option> Monotonic-Stack </option>
+                        <option> Number-Theory </option>
+                        <option> Ordered-Set </option>
+                        <option> Prefix-Sum </option>
+                        <option> Probability-and-Statistics </option>
+                        <option> Queue </option>
+                        <option> Quickselect </option>
+                        <option> Randomized </option>
+                        <option> Recursion </option>
+                        <option> Rolling-Hash </option>
+                        <option> Shortest-Path </option>
+                        <option> Simulation </option>
+                        <option> Sliding-Window </option>
+                        <option> Sorting </option>
+                        <option> Stack </option>
+                        <option> String </option>
+                        <option> String-Matching </option>
+                        <option> Strongly-Connected-Component </option>
+                        <option> Suffix-Array </option>
+                        <option> Topological-Sort </option>
+                        <option> Tree </option>
+                        <option> Trie </option>
+                        <option> Two-Pointers </option>
+                        <option> Union-Find </option>
+
+                    </select>
+                </div>
+                <button type="submit">
                Create</button>
-             </form>
+            </form>
             <UserSchedule props={selectId}/>
             <button onClick={fetchData}>Load Problems</button>
            
